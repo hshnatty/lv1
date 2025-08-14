@@ -93,8 +93,3 @@ const deletePost = (postId) => {
         });
 };
 
-// Load posts with delete buttons for owner/admin
-const loadPosts = () => {
-    db.collection("posts").orderBy("timestamp", "desc").get().then((querySnapshot) => {
-        const postsDiv = document.getElementById("posts");
-        postsDiv.innerHT
