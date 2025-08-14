@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LV1 Admin</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>LV1 Admin</h1>
+    <nav>
+      <a class="admin-link" href="index.html">Back to Chat</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="auth-card" id="adminAuth">
+      <h2>Admin Login</h2>
+      <input id="adminEmailInput" type="email" placeholder="Email" />
+      <input id="adminPasswordInput" type="password" placeholder="Password" />
+      <button id="adminSignInBtn">Sign In</button>
+      <button id="signOutBtn" class="secondary">Sign out</button>
+      <div id="adminStatus" class="status"></div>
+      <small class="hint">Only the configured admin email can manage and delete messages.</small>
+    </section>
+
+    <section id="adminPanel" class="hidden">
+      <div class="admin-badge">Admin Mode</div>
+      <div class="composer admin-composer">
+        <textarea id="adminMessageInput" rows="3" placeholder="Write an admin message..."></textarea>
+        <div class="composer-row">
+          <input type="file" id="adminImageInput" accept="image/*" />
+          <label class="switch">
+            <input type="checkbox" id="adminStyleToggle" checked />
+            <span>Admin style (blue on black)</span>
+          </label>
+          <button id="adminSendBtn">Post</button>
+        </div>
+      </div>
+
+      <h2>All messages</h2>
+      <div id="adminMessages"></div>
+    </section>
+  </main>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
