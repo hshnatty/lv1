@@ -40,6 +40,7 @@ const login = () => {
         document.getElementById("user-name").innerText = `Welcome, ${userName}`;
         loadPosts();
         toggleVisibility("forum-container");
+        toggleVisibility("login-container", false); // Hide login after successful login
     }).catch((error) => {
         console.error("Login Error: ", error);
     });
