@@ -42,7 +42,7 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Full screen height */
+    height: 100vh;
 }
 
 #login-container button {
@@ -58,4 +58,3 @@ button:hover {
 #login-container button:hover {
     background-color: #45a049;
 }
-
