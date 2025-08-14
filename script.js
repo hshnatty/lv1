@@ -26,7 +26,10 @@ auth.onAuthStateChanged((user) => {
             if (doc.exists && doc.data().username) {
                 userName = doc.data().username;
                 document.getElementById("user-name").innerText = `Welcome, ${userName}`;
-                loadPosts();
+              if(postData.imageUrl) {
+    postElement.innerHTML += `<img src="${postData.imageUrl}" style="max-width: 300px; display:block; margin-top:10px;" />`;
+}
+
                 toggleVisibility("forum-container");
                 toggleVisibility("login-container", false);
                 toggleVisibility("username-setup", false);
