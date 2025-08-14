@@ -17,6 +17,21 @@ const db = firebase.firestore();
 let userId = null;
 let userName = null;
 
+// Restore login on page reload
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        userId = user.uid;
+        userName = user.displayName || `User-${Math.floor(Math.random() * 10000)}`;
+        document.getElementById("user-name").innerText = `Welcome, ${userName}`;
+        loadPosts();
+        toggleVisibility("forum-container");
+        toggleVisibility("login-container", false);
+    } else {
+        toggleVisibility("login-container");
+        toggleVisibility("forum-container", false);
+    }
+});
+
 const login = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider).then((result) => {
@@ -64,7 +79,7 @@ const loadPosts = () => {
             postElement.innerHTML = `
                 <h3>${postData.userName}</h3>
                 <p>${postData.content}</p>
-                <small>Posted on ${new Date(postData.timestamp.seconds * 1000).toLocaleString()}</small>
+                <small>Posted on ${postData.timestamp ? new Date(postData.timestamp.seconds * 1000).toLocaleString() : "Unknown"}</small>
             `;
             postsDiv.appendChild(postElement);
         });
