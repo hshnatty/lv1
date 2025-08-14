@@ -20,10 +20,13 @@
         <button onclick="logout()">Logout</button>
         <div id="post-container">
             <textarea id="post-text" placeholder="Write something..."></textarea>
+            <input type="file" id="post-image" accept="image/*" />
+
             <button onclick="submitPost()">Post</button>
         </div>
         <div id="posts"></div>
     </div>
+    
     <div id="admin-container" style="display:none;">
         <h1>Admin Dashboard</h1>
         <button onclick="deletePost(postId)">Delete Post</button>
