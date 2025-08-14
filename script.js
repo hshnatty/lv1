@@ -9,36 +9,54 @@ const firebaseConfig = {
     measurementId: "G-1QXRLXB33N"
 };
 
-const app = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// User authentication and posts logic
+// User data
 let userId = null;
 let userName = null;
 
+// Login function
 const login = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then((result) => {
-        userId = result.user.uid;
-        userName = result.user.displayName || `User-${Math.floor(Math.random() * 10000)}`;
-        document.getElementById("user-name").innerText = `Welcome, ${userName}`;
-        loadPosts();
-        toggleVisibility("forum-container");
-    }).catch((error) => {
-        console.error("Login Error: ", error);
-    });
+    auth.signInWithPopup(provider)
+        .then((result) => {
+            userId = result.user.uid;
+            userName = result.user.displayName || `User-${Math.floor(Math.random() * 10000)}`;
+            document.getElementById("user-name").innerText = `Welcome, ${userName}`;
+            showForum();
+            loadPosts();
+        })
+        .catch((error) => {
+            console.error("Login Error:", error);
+        });
 };
 
+// Logout function
 const logout = () => {
-    auth.signOut().then(() => {
-        toggleVisibility("login-container");
-        toggleVisibility("forum-container", false);
-    }).catch((error) => {
-        console.error("Logout Error: ", error);
-    });
+    auth.signOut()
+        .then(() => {
+            showLogin();
+        })
+        .catch((error) => {
+            console.error("Logout Error:", error);
+        });
 };
 
+// Show forum, hide login
+const showForum = () => {
+    document.getElementById("login-container").style.display = "none";
+    document.getElementById("forum-container").style.display = "block";
+};
+
+// Show login, hide forum
+const showLogin = () => {
+    document.getElementById("login-container").style.display = "flex"; // flex so it's centered
+    document.getElementById("forum-container").style.display = "none";
+};
+
+// Submit a new post
 const submitPost = () => {
     const postText = document.getElementById("post-text").value;
     if (postText.trim() !== "") {
@@ -54,6 +72,7 @@ const submitPost = () => {
     }
 };
 
+// Load posts
 const loadPosts = () => {
     db.collection("posts").orderBy("timestamp", "desc").get().then((querySnapshot) => {
         const postsDiv = document.getElementById("posts");
@@ -64,26 +83,22 @@ const loadPosts = () => {
             postElement.innerHTML = `
                 <h3>${postData.userName}</h3>
                 <p>${postData.content}</p>
-                <small>Posted on ${new Date(postData.timestamp.seconds * 1000).toLocaleString()}</small>
+                <small>Posted on ${postData.timestamp ? new Date(postData.timestamp.seconds * 1000).toLocaleString() : "Just now"}</small>
             `;
             postsDiv.appendChild(postElement);
         });
     });
 };
 
-const toggleVisibility = (id, show = true) => {
-    document.getElementById(id).style.display = show ? "block" : "none";
-};
-
-function login() {
-    var provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider)
-        .then((result) => {
-            console.log("Logged in:", result.user);
-            document.getElementById("login-container").style.display = "none"; // Hides login button
-            document.getElementById("forum-container").style.display = "block"; // Shows forum
-        })
-        .catch((error) => {
-            console.error("Login Error:", error);
-        });
-}
+// Keep user logged in after refresh
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        userId = user.uid;
+        userName = user.displayName || `User-${Math.floor(Math.random() * 10000)}`;
+        document.getElementById("user-name").innerText = `Welcome, ${userName}`;
+        showForum();
+        loadPosts();
+    } else {
+        showLogin();
+    }
+});
