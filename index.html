@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orthodox Community Forum</title>
-    <link rel="stylesheet" href="styles.css">
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore-compat.js"></script>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LV1 Chat</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div id="login-container">
-        <button onclick="login()">Login with Google</button>
-    </div>
-    <div id="forum-container" style="display:none;">
-        <h1>Orthodox Community Forum</h1>
-        <p id="user-name"></p>
-        <button onclick="logout()">Logout</button>
-        <div id="post-container">
-            <textarea id="post-text" placeholder="Write something..."></textarea>
-            <input type="file" id="post-image" accept="image/*" />
+  <header class="app-header">
+    <h1>LV1 Chat</h1>
+    <nav>
+      <a class="admin-link" href="admin.html">Admin</a>
+    </nav>
+  </header>
 
-            <button onclick="submitPost()">Post</button>
-        </div>
-        <div id="posts"></div>
-    </div>
-    
-    <div id="admin-container" style="display:none;">
-        <h1>Admin Dashboard</h1>
-        <button onclick="deletePost(postId)">Delete Post</button>
-        <div id="admin-posts"></div>
-    </div>
+  <main class="container">
+    <section class="auth-bar" id="authBar">
+      <div id="userStatus">Not signed in</div>
+      <div class="auth-actions">
+        <input id="displayName" type="text" placeholder="Enter a display name" />
+        <button id="anonSignInBtn">Join Chat</button>
+        <button id="signOutBtn" class="secondary">Sign out</button>
+      </div>
+      <small class="hint">Regular users join anonymously. Admin uses <em>admin.html</em> to sign in.</small>
+    </section>
 
-    <script src="script.js"></script>
-    <!-- Username setup form -->
-<div id="username-setup" style="display:none; text-align:center; margin-top:20px;">
-  <h2>Choose your username</h2>
-  <input type="text" id="username-input" placeholder="Enter your username" required>
-  <button onclick="saveUsername()">Save</button>
-</div>
+    <section class="composer" id="composer">
+      <textarea id="messageInput" rows="3" placeholder="Write a message..."></textarea>
+      <div class="composer-row">
+        <input type="file" id="imageInput" accept="image/*" />
+        <button id="sendBtn">Send</button>
+      </div>
+    </section>
 
+    <section>
+      <h2>Messages</h2>
+      <div id="messages"></div>
+    </section>
+  </main>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
