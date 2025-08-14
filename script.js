@@ -74,3 +74,16 @@ const loadPosts = () => {
 const toggleVisibility = (id, show = true) => {
     document.getElementById(id).style.display = show ? "block" : "none";
 };
+
+function login() {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+            console.log("Logged in:", result.user);
+            document.getElementById("login-container").style.display = "none"; // Hides login button
+            document.getElementById("forum-container").style.display = "block"; // Shows forum
+        })
+        .catch((error) => {
+            console.error("Login Error:", error);
+        });
+}
