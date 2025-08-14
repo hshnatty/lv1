@@ -16,14 +16,23 @@ const db = firebase.firestore();
 // User data
 let userId = null;
 let userName = null;
+let isAdminUser = false;
 
-// Login function
+// Check if user is admin
+const checkAdmin = async (uid) => {
+    const userDoc = await db.collection("users").doc(uid).get();
+    return userDoc.exists && userDoc.data().isAdmin === true;
+};
+
+// Login
 const login = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider)
-        .then((result) => {
+        .then(async (result) => {
             userId = result.user.uid;
             userName = result.user.displayName || `User-${Math.floor(Math.random() * 10000)}`;
+            isAdminUser = await checkAdmin(userId);
+
             document.getElementById("user-name").innerText = `Welcome, ${userName}`;
             showForum();
             loadPosts();
@@ -33,7 +42,7 @@ const login = () => {
         });
 };
 
-// Logout function
+// Logout
 const logout = () => {
     auth.signOut()
         .then(() => {
@@ -72,33 +81,20 @@ const submitPost = () => {
     }
 };
 
-// Load posts
+// Delete post
+const deletePost = (postId) => {
+    db.collection("posts").doc(postId).delete()
+        .then(() => {
+            console.log("Post deleted:", postId);
+            loadPosts();
+        })
+        .catch((error) => {
+            console.error("Delete Error:", error);
+        });
+};
+
+// Load posts with delete buttons for owner/admin
 const loadPosts = () => {
     db.collection("posts").orderBy("timestamp", "desc").get().then((querySnapshot) => {
         const postsDiv = document.getElementById("posts");
-        postsDiv.innerHTML = "";
-        querySnapshot.forEach((doc) => {
-            const postData = doc.data();
-            const postElement = document.createElement("div");
-            postElement.innerHTML = `
-                <h3>${postData.userName}</h3>
-                <p>${postData.content}</p>
-                <small>Posted on ${postData.timestamp ? new Date(postData.timestamp.seconds * 1000).toLocaleString() : "Just now"}</small>
-            `;
-            postsDiv.appendChild(postElement);
-        });
-    });
-};
-
-// Keep user logged in after refresh
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        userId = user.uid;
-        userName = user.displayName || `User-${Math.floor(Math.random() * 10000)}`;
-        document.getElementById("user-name").innerText = `Welcome, ${userName}`;
-        showForum();
-        loadPosts();
-    } else {
-        showLogin();
-    }
-});
+        postsDiv.innerHT
