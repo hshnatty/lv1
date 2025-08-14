@@ -18,24 +18,10 @@ let userId = null;
 let userName = null;
 
 // Restore login on page reload
-auth.onAuthStateChanged(async (user) => {
+auth.onAuthStateChanged((user) => {
     if (user) {
         userId = user.uid;
-
-        // Check if username is saved in Firestore
-        const userDoc = await db.collection("users").doc(userId).get();
-        if (userDoc.exists) {
-            userName = userDoc.data().name;
-        } else {
-            // Ask for username only once
-            let nameInput = "";
-            while (!nameInput.trim()) {
-                nameInput = prompt("What do you want to be called?");
-            }
-            userName = nameInput.trim();
-            await db.collection("users").doc(userId).set({ name: userName });
-        }
-
+        userName = user.displayName || `User-${Math.floor(Math.random() * 10000)}`;
         document.getElementById("user-name").innerText = `Welcome, ${userName}`;
         loadPosts();
         toggleVisibility("forum-container");
@@ -48,23 +34,9 @@ auth.onAuthStateChanged(async (user) => {
 
 const login = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then(async (result) => {
+    auth.signInWithPopup(provider).then((result) => {
         userId = result.user.uid;
-
-        // Check if username exists in Firestore
-        const userDoc = await db.collection("users").doc(userId).get();
-        if (userDoc.exists) {
-            userName = userDoc.data().name;
-        } else {
-            // Ask for username the first time
-            let nameInput = "";
-            while (!nameInput.trim()) {
-                nameInput = prompt("What do you want to be called?");
-            }
-            userName = nameInput.trim();
-            await db.collection("users").doc(userId).set({ name: userName });
-        }
-
+        userName = result.user.displayName || `User-${Math.floor(Math.random() * 10000)}`;
         document.getElementById("user-name").innerText = `Welcome, ${userName}`;
         loadPosts();
         toggleVisibility("forum-container");
