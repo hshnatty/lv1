@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orthodox Community Forum</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-functions.js"></script>
+</head>
+<body>
+    <div id="login-container">
+        <button onclick="login()">Login with Google</button>
+    </div>
+    <div id="forum-container" style="display:none;">
+        <h1>Orthodox Community Forum</h1>
+        <p id="user-name"></p>
+        <button onclick="logout()">Logout</button>
+        <div id="post-container">
+            <textarea id="post-text" placeholder="Write something..."></textarea>
+            <button onclick="submitPost()">Post</button>
+        </div>
+        <div id="posts"></div>
+    </div>
+    <div id="admin-container" style="display:none;">
+        <h1>Admin Dashboard</h1>
+        <button onclick="deletePost(postId)">Delete Post</button>
+        <div id="admin-posts"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
