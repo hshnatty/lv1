@@ -84,20 +84,33 @@ const logout = () => {
 };
 
 // Submit a post
-const submitPost = () => {
+const submitPost = async () => {
     const postText = document.getElementById("post-text").value;
-    if (postText.trim() !== "") {
-        db.collection("posts").add({
+    const imageFile = document.getElementById("post-image").files[0];
+    let imageUrl = null;
+
+    if (imageFile) {
+        const storageRef = firebase.storage().ref();
+        const imageRef = storageRef.child(`posts/${userId}_${Date.now()}_${imageFile.name}`);
+        await imageRef.put(imageFile);
+        imageUrl = await imageRef.getDownloadURL();
+    }
+
+    if (postText.trim() !== "" || imageUrl) {
+        await db.collection("posts").add({
             userId: userId,
             userName: userName,
             content: postText,
+            imageUrl: imageUrl || null,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            document.getElementById("post-text").value = "";
-            loadPosts();
         });
+
+        document.getElementById("post-text").value = "";
+        document.getElementById("post-image").value = "";
+        loadPosts();
     }
 };
+
 
 // Submit a reply
 const submitReply = (postId) => {
